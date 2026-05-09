@@ -60,6 +60,7 @@ jobs:
           path: |
                 app/build/outputs/apk/release/
                 app/build/outputs/bundle/release/
+                leankeyboard-handhelds/build/generated/output/apk/release/
 
       #4
       - name: Create Github Release of prerelease APK

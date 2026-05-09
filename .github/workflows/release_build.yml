@@ -69,4 +69,5 @@ jobs:
           name: signed_build
           tag_name: release
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: app/build/outputs/apk/release/
+          files: |
+                  app/build/outputs/apk/release/

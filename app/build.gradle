@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+android{
+    namespace 'com.gumbyxgames.leankeykeyboard'
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    compileSdk 37
+
+
+    defaultConfig {
+        applicationId "org.gumbyxgames.leankeykeyboard_handhelds"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.1"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true // enable obfuscation
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def project = "leanKeyboard-handhelds"
+            def buildType = variant.buildType.name
+            def version = variant.versionName
+
+            //def newApkName = sprintf("%s-v%s-%s.apk", project, version, buildType)
+            def newApkName = sprintf("%s-v%s.apk", project, version)
+            output.outputFileName = new File(newApkName)
+        }
+    }
+
+    flavorDimensions "default"
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation rootProject.ext.junitVersion
+    implementation rootProject.ext.appCompatXVersion
+    implementation rootProject.ext.leanbackCompatXVersion
+    implementation rootProject.ext.constraintXVersion
+    implementation rootProject.ext.designXVersion
+    implementation rootProject.ext.voiceOverlayVersion
+}

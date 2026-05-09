@@ -1,8 +1,6 @@
 package com.gumbyxgames.leankeyboard.fragments.settings;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,7 +15,6 @@ import java.util.List;
 public class AboutFragment extends GuidedStepSupportFragment {
     private static final String RELEASES_URL = "https://github.com/GumbyXGames/LeanKeyboard-Handhelds/releases";
     private static final String ISSUE_URL = "https://github.com/GumbyXGames/LeanKeyboard-Handhelds/issues";
-    private static final String[] URL_MAPPING = {RELEASES_URL , ISSUE_URL};
     private int mId;
 
     @NonNull

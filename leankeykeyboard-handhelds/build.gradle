@@ -16,8 +16,8 @@ android{
 
     defaultConfig {
         applicationId "org.gumbyxgames.leankeykeyboard_handhelds"
-        minSdkVersion project.properties.minSdkVersion
-        targetSdkVersion project.properties.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.1"
 
@@ -48,10 +48,10 @@ android{
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation project.properties.junitVersion
-    implementation project.properties.appCompatXVersion
-    implementation project.properties.leanbackCompatXVersion
-    implementation project.properties.constraintXVersion
-    implementation project.properties.designXVersion
-    implementation project.properties.voiceOverlayVersion
+    testImplementation rootProject.ext.junitVersion
+    implementation rootProject.ext.appCompatXVersion
+    implementation rootProject.ext.leanbackCompatXVersion
+    implementation rootProject.ext.constraintXVersion
+    implementation rootProject.ext.designXVersion
+    implementation rootProject.ext.voiceOverlayVersion
 }

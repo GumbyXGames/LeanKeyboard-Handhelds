@@ -62,8 +62,8 @@ jobs:
                 app/build/generated/outputs/apk/release/
                 app/build/generated/outputs/bundle/release/
 
-        - name: Unzip build
-          run: unzip release-artifact -d ./extracted_files
+      - name: Unzip build
+        run: unzip release-artifact -d ./extracted_files
 
       #4
       - name: Create Github Release

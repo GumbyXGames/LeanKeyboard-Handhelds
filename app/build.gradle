@@ -24,10 +24,24 @@ android{
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            // Load local.properties in an object
+            def localProperties = new Properties()
+            localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+            // Use the object to access properties
+            storeFile file(localProperties['STORE_FILE'])
+            storePassword localProperties['STORE_PASSWORD']
+            keyPassword localProperties['KEY_PASSWORD']
+            keyAlias localProperties['KEY_ALIAS']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true // enable obfuscation
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

@@ -17,25 +17,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Set Secret Properties
+        env:
+          LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
+        run: echo "$LOCAL_PROPERTIES" > ./local.properties
+
+      - name: Prepare release keystore
+        run: |
+              echo "${{ secrets.KEY_STORE_BASE64 }}" > keystore-b64.txt
+              base64 -d keystore-b64.txt > app/keystore.jks
+
       - name: Setup Gradle cache
         uses: gradle/gradle-build-action@v3
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: debug_build
-          path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Decode Keystore
-        env:
-          KEY_STORE_ENCODED: ${{ secrets.KEY_STORE_BASE64 }}
-          KEY_STORE: ""
-        run: |
-          echo $KEY_STORE_ENCODED > keystore-b64.txt
-          base64 -d keystore-b64.txt > $KEY_STORE
 
       - name: Build release APK
         run: ./gradlew assembleRelease
@@ -43,29 +39,16 @@ jobs:
       - name: List directory structure
         run: tree . -P "*.apk"
 
-      - name: Sign APK
-        run: |
-              jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \ 
-              -keystore $KEY_STORE -storepass ${{ secrets.KEY_STORE_PASSWORD }} \ 
-              -keypass ${{ secrets.KEY_PASSWORD }} app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
-
-      - name: Verify signature
-        run: jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk
-
-      - name: Align APK
-        run: |
-              $ANDROID_HOME/build-tools/34.0.0/zipalign -v 4 \
-              app/build/outputs/apk/release/app-release-unsigned.apk \
-              app/build/outputs/apk/release/app-release.apk
-
-      - name: Upload Signed APK
+      - name: Upload Signed APKs
         uses: actions/upload-artifact@v7.0.1
         with:
               name: Signed-APK
-              path: app/build/outputs/apk/release/app-release.apk
+              path: |
+                    app/build/outputs/apk/release/app-release.apk
+                    app/build/outputs/apk/debug/app-debug.apk
 
       - name: Create Github Release of prerelease APK
-        uses: softprops/action-gh-release@v3.0.0
+        uses: softprops/action-gh-release@v3.0.0locallocal
         with:
             generate_release_notes: false
             prerelease: true

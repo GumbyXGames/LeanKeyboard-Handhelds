@@ -1,4 +1,4 @@
-name: Create Github Release Build (APK and App Bundle)
+name: Create Github Prerelease Build (APK and App Bundle)
 
 on: workflow_dispatch
 
@@ -61,12 +61,13 @@ jobs:
                 app/build/outputs/bundle/release/
 
       #4
-      - name: Create Github Release
+      - name: Create Github Release of prerelease APK
         uses: softprops/action-gh-release@v3.0.0
         with:
           generate_release_notes: true
-          prerelease: false
+          prerelease: true
           name: signed_build
-          tag_name: release
+          tag_name: prerelease
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: app/build/outputs/apk/release/
+          files: |
+                  app/build/outputs/apk/release/

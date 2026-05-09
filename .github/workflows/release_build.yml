@@ -62,15 +62,19 @@ jobs:
                 app/build/generated/outputs/apk/release/
                 app/build/generated/outputs/bundle/release/
 
+        - name: Unzip build
+          run: unzip release-artifact -d ./extracted_files
+
       #4
       - name: Create Github Release
         uses: softprops/action-gh-release@v3.0.0
         with:
           generate_release_notes: true
           prerelease: false
-          name: release_build
+#          name: release_build
           tag_name: release
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |
                   app/build/outputs/apk/release/app-release.apk
                   app/build/generated/outputs/apk/release/app-release.apk
+                  ./extracted_files/app-release.apk

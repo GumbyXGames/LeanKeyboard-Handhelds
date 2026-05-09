@@ -1,3 +1,4 @@
+#name: Build Signed Android Release APK and Create Github Release (No Release Notes)
 name: Testing Build Action
 
 on: workflow_dispatch
@@ -43,12 +44,19 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew assembleRelease
 
+      #List directories
+      - name: List directory structure
+        run: tree . -P "*.apk"
+
+
       #3
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: release-artifact
-          path: home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/
+          path: |
+            app/build/outputs/apk/release/
+            home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/
 
       #4
       - name: Create Github Release
@@ -59,4 +67,6 @@ jobs:
           name: test_signed_build
           tag_name: test_signed_release
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/app-release.apk
+          files: |
+            app/build/outputs/apk/release/app-release.apk
+            home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/app-release.apk

@@ -59,9 +59,8 @@ jobs:
           name: release-artifact
           path: |
                 app/build/outputs/apk/release/
-                app/build/outputs/bundle/release/
-                app/build/generated/outputs/apk/release/
-                app/build/generated/outputs/bundle/release/
+                app/build/outputs/apk/release/app-release.apk
+                app/build/outputs/bundle/release/app-release.abb
 
       #4
       - name: Create Github Release of prerelease APK
@@ -69,7 +68,7 @@ jobs:
         with:
           generate_release_notes: false
           prerelease: true
-          name: prerelease_build
+#          name: prerelease_build
           tag_name: prerelease
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |

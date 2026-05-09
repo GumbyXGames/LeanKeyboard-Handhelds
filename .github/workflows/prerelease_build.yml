@@ -62,6 +62,9 @@ jobs:
                 app/build/outputs/apk/release/app-release.apk
                 app/build/outputs/bundle/release/app-release.abb
 
+      - name: List directory structure
+        run: tree . -P "*.apk"
+
       #4
       - name: Create Github Release of prerelease APK
         uses: softprops/action-gh-release@v3.0.0

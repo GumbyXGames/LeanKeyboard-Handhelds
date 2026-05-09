@@ -29,9 +29,6 @@ jobs:
       - name: Build Release bundle
         run: ./gradlew bundleRelease
 
-      - name: List directory structure
-        run: tree . -P "*.apk"
-
       - name: Upload Signed APKs
         uses: actions/upload-artifact@v7.0.1
         with:
@@ -48,5 +45,6 @@ jobs:
           prerelease: false
 #          name: release_build
           tag_name: release
+          make_latest: true
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: app/build/outputs/apk/release/app-release.apk

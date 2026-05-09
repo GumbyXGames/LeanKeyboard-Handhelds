@@ -59,6 +59,8 @@ jobs:
           path: |
                 app/build/outputs/apk/release/
                 app/build/outputs/bundle/release/
+                app/build/generated/outputs/apk/release/
+                app/build/generated/outputs/bundle/release/
 
       #4
       - name: Create Github Release
@@ -66,7 +68,9 @@ jobs:
         with:
           generate_release_notes: true
           prerelease: false
-          name: signed_build
+          name: release_build
           tag_name: release
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: app/build/outputs/apk/release/app-release.apk
+          files: |
+                  app/build/outputs/apk/release/app-release.apk
+                  app/build/generated/outputs/apk/release/app-release.apk

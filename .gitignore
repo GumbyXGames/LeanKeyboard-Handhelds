@@ -22,3 +22,4 @@ tmp/
 .externalNativeBuild
 fabric.properties
 *BAK.java
+*output-metadata.json

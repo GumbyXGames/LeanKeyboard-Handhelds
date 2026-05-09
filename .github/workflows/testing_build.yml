@@ -37,8 +37,9 @@ jobs:
 
       - name: Sign APK
         run: |
-              apksigner sign —ks mmy-release-key.jks —ks-key-alias \ 
-              apk_signing app/build/outputs/apk/release/app-release-unsigned.apk
+              jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \ 
+              -keystore my-release-key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} \ 
+              app/build/outputs/apk/release/app-release-unsigned.apk ${{ secrets.KEY_ALIAS }}
 
       - name: Verify signature
         run: jarsigner -verify -verbose -certs app/build/outputs/apk/release/app-release-unsigned.apk

@@ -8,64 +8,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v5.2.0
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '25'
 
-      - name: Cache Gradle and wrapper
-        uses: actions/cache@v5.0.5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-
-      #1
-      - name: Decode Keystore
+      - name: Set Secret Properties
         env:
-          ENCODED_STRING: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+          LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
+        run: echo "$LOCAL_PROPERTIES" > ./local.properties
+
+      - name: Prepare release keystore
         run: |
-          echo $ENCODED_STRING > keystore-b64.txt
-          base64 -d keystore-b64.txt > $SIGNING_KEY_STORE_PATH
+          echo "${{ secrets.KEY_STORE_BASE64 }}" > keystore-b64.txt
+          base64 -d keystore-b64.txt > app/keystore.jks
 
-      #2
-      - name: Build Release apk
-        env:
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      - name: Setup Gradle cache
+        uses: gradle/gradle-build-action@v3
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Build release APK
         run: ./gradlew assembleRelease
 
-
-      - name: Build Release bundle
-        env:
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      - name: Build release bundle
         run: ./gradlew bundleRelease
 
-      #3
-      - name: Upload Release Build to Artifacts
+      - name: Upload Signed APKs
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: release-artifact
+          name: Signed-APK
           path: |
-                app/build/outputs/apk/release/
-                app/build/outputs/apk/release/app-release.apk
-                app/build/outputs/bundle/release/app-release.abb
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/bundle/release/app-bundle.abb
 
-      - name: List directory structure
-        run: tree . -P "*.apk"
-
-      #4
       - name: Create Github Release of prerelease APK
         uses: softprops/action-gh-release@v3.0.0
         with:
@@ -74,6 +56,4 @@ jobs:
 #          name: prerelease_build
           tag_name: prerelease
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          files: |
-                  app/build/outputs/apk/release/app-release.apk
-                  app/build/generated/outputs/apk/release/app-release.apk
+          files: app/build/outputs/apk/release/app-release.apk

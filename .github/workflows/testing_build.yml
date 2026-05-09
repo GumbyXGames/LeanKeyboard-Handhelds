@@ -1,4 +1,4 @@
-name: Testing Android APK Building
+name: Build Signed Testing APKs
 
 on: workflow_dispatch
 
@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '25'
 
       - name: Set Secret Properties
         env:
@@ -24,8 +24,8 @@ jobs:
 
       - name: Prepare release keystore
         run: |
-              echo "${{ secrets.KEY_STORE_BASE64 }}" > keystore-b64.txt
-              base64 -d keystore-b64.txt > app/keystore.jks
+          echo "${{ secrets.KEY_STORE_BASE64 }}" > keystore-b64.txt
+          base64 -d keystore-b64.txt > app/keystore.jks
 
       - name: Setup Gradle cache
         uses: gradle/gradle-build-action@v3
@@ -42,16 +42,7 @@ jobs:
       - name: Upload Signed APKs
         uses: actions/upload-artifact@v7.0.1
         with:
-              name: Signed-APK
-              path: |
-                    app/build/outputs/apk/release/app-release.apk
-                    app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Create Github Release of prerelease APK
-        uses: softprops/action-gh-release@v3.0.0
-        with:
-            generate_release_notes: false
-            prerelease: true
-            tag_name: test_release
-            token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-            files: app/build/outputs/apk/release/app-release.apk
+          name: Signed-APK
+          path: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/debug/app-debug.apk

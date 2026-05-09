@@ -48,7 +48,7 @@ jobs:
                     app/build/outputs/apk/debug/app-debug.apk
 
       - name: Create Github Release of prerelease APK
-        uses: softprops/action-gh-release@v3.0.0locallocal
+        uses: softprops/action-gh-release@v3.0.0
         with:
             generate_release_notes: false
             prerelease: true

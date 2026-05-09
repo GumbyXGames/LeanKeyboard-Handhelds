@@ -56,7 +56,6 @@ jobs:
           name: release-artifact
           path: |
             app/build/outputs/apk/release/
-            home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/
 
       #4
       - name: Create Github Release
@@ -69,4 +68,3 @@ jobs:
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |
             app/build/outputs/apk/release/app-release.apk
-            home/runner/work/LeanKeyboard-Handhelds/LeanKeyboard-Handhelds/app/build/outputs/apk/release/app-release.apk

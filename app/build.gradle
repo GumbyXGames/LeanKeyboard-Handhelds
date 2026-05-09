@@ -38,8 +38,8 @@ android{
             def version = variant.versionName
 
             //def newApkName = sprintf("%s-v%s-%s.apk", project, version, buildType)
-            def newApkName = sprintf("%s-v%s.apk", project, version)
-            output.outputFileName = new File(newApkName)
+            //def newApkName = sprintf("%s-v%s.apk", project, version)
+            //output.outputFileName = new File(newApkName)
         }
     }
 
